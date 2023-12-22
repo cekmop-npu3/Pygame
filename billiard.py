@@ -137,8 +137,11 @@ class Window:
                 exit()
             if event.type == pygame.MOUSEWHEEL:
                 self.ball_size = (a if (a := self.ball_size + self.increment) < 300 else 300) if event.y > 0 else (b if (b := self.ball_size - self.increment) > 1 else 1)
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                self.press_pos = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.press_pos = pygame.mouse.get_pos()
+                elif event.button == 3:
+                    self.balls.remove(next(filter(lambda ball: dist([ball.x, ball.y], [(a := pygame.mouse.get_pos())[0], a[1]]) < ball.radius, self.balls)))
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 self.balls.append(Ball(self.window, (a := pygame.mouse.get_pos()), self.ball_size, dist([self.press_pos[0], self.press_pos[1]], [a[0], a[1]]) // 20, degrees(atan2((self.press_pos[1] - a[1]), self.press_pos[0] - a[0]))))
         keys = pygame.mouse.get_pressed()
